@@ -50,5 +50,12 @@ class AbstractController {
         return array('controller' => $controller, 'action' => $action);
     }
 
+    protected function redirect($url, $statusCode = 301) {
+        ob_clean();
+        header('Location: ' . $url, false, $statusCode);
+        ob_end_flush();
+        exit;
+    }
+
 }
 

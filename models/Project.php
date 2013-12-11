@@ -13,6 +13,7 @@ class Project implements IModel {
     private $description;
     private $dateCreated;
     private $dateFinished;
+    private $tasks;
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
@@ -27,6 +28,7 @@ class Project implements IModel {
             $this->description = $R['description'];
             $this->dateCreated = $R['dateCreated'];
             $this->dateFinished = $R['dateFinished'];
+            $this->tasks = $this->fetchTasks();
         }
     }
 
@@ -105,6 +107,29 @@ class Project implements IModel {
     public function setDateFinished($dateFinished) {
         $this->dateFinished = $dateFinished;
         return $this;
+    }
+
+    public function getNumberOfTasks($includeSubTasks = false) {
+        $DBH = System::getInstance()->getDBH();
+        $R = $DBH->query('SELECT COUNT(*) FROM ' . System::TABLE_PROJECT_TASKS . ' WHERE project="' . $this->id . '"')->fetch();
+        return $R['COUNT(*)'];
+    }
+
+    public function getLastActivity() {
+        return "TODO";
+    }
+
+    private function fetchTasks() {
+        $DBH = System::getInstance()->getDBH();
+        $ret = array();
+        foreach ($DBH->query('SELECT task FROM ' . System::TABLE_PROJECT_TASKS . ' pt JOIN ' . System::TABLE_TASKS . ' t ON pt.task = t.id WHERE project="' . $this->id . '" && parentTask IS NULL') as $R) {
+            $ret[] = new Task($R['task']);
+        }
+        return $ret;
+    }
+
+    public function getTasks() {
+        return $this->tasks;
     }
 
 }

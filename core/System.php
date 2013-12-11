@@ -19,6 +19,7 @@ class System {
 
     private $DBH;
     private static $instance = null;
+    private $user = null;
 
     private function __construct() {
         $config = parse_ini_file('config.ini');
@@ -56,6 +57,10 @@ class System {
      */
     public function getDBH() {
         return $this->DBH;
+    }
+
+    public static function currentUser() {
+        return new \Figeor\Models\User(1);
     }
 
 }

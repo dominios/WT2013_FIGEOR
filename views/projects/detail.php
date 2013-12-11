@@ -1,0 +1,40 @@
+<h3>Zoznam úloh pre projekt <?= $this->project->getName(); ?>:</h3>
+<?
+foreach ($this->tasks as $task):
+    echo '<div class="task" style="margin: 15px 0; padding: 5px; border: 1px solid #ccc;">';
+    echo '<strong>' . $task->getName() . '</strong>';
+    echo ', termín: ' . $task->getDeadline();
+    echo ', priorita: ' . $task->getPriority();
+    echo ', body: ' . $task->getPoints();
+
+    echo '<p>' . $task->getDescription() . '</p>';
+
+    echo '<div class="subTasks">';
+    if ($task->hasSubTasks()) {
+        echo 'Podúlohy:';
+        echo '<ul>';
+        $tasks = $task->getSubTasks();
+        foreach ($tasks as $t):
+            echo '<li>' . $t->getName() . '</li>';
+        endforeach;
+        echo '</ul>';
+    }
+    echo '<button onclick="javascript: window.location = \'/tasks/add/project/' . $this->project->getId() . '/task/' . $t->getId() . '\';">Pridať podúlohu</button>';
+    echo '</div>';
+
+    echo '<div class="attachments">';
+    echo '[prílohy]';
+    echo '</div>';
+
+    // cp
+    echo '<div style="float: right;">';
+    echo '<a href="/tasks/edit/' . $task->getId() . '">[upraviť]</a>';
+    echo '</div>';
+
+    echo '<div style="clear: both;"></div>';
+
+    echo '</div>';
+endforeach;
+?>
+
+<button onclick="javascript: window.location = '/tasks/add/project/<?= $this->project->getId(); ?>';">Pridať úlohu</button>

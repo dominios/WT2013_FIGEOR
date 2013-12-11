@@ -8,32 +8,28 @@ use \PDO;
 class Task implements IModel {
 
     private $id;
-    private $project;
     private $parentTask;
-    private $user;
     private $name;
     private $description;
     private $dateCreated;
-    private $dateCompleted;
+    private $dateFinished;
     private $deadline;
     private $points;
     private $priority;
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_TASKS . ' WHERE id_t=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_TASKS . ' WHERE id=:i');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         if ($Q->rowCount()) {
             $R = $Q->fetch();
-            $this->id = $R['id_t'];
-            $this->project = new Project($R['id_p']);
+            $this->id = $R['id'];
             $this->parentTask = is_numeric($R['parentTask']) ? new Task($R['parentTask']) : null;
-            $this->user = new User($R['id_u']);
             $this->name = $R['name'];
             $this->description = $R['description'];
             $this->dateCreated = $R['dateCreated'];
-            $this->dateCompleted = $R['dateCompleted'];
+            $this->dateFinished = $R['dateFinished'];
             $this->deadline = $R['deadline'];
             $this->points = $R['points'];
             $this->priority = $R['priority'];
@@ -41,17 +37,18 @@ class Task implements IModel {
     }
 
     public static function create($initialValues) {
-        $user = $initialValues['user'];
         $project = $initialValues['project'];
         $parentTask = is_numeric($initialValues['parentTask']) ? $initialValues['parentTask'] : null;
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('INSET INTO ' . System::TABLE_TASKS . ' (id_u, id_p, parentTask, dateCreated) VALUES (:iu, :ip, :pt, :dc)');
-        $Q->bindValue(':iu', $user->getId(), PDO::PARAM_INT);
-        $Q->bindValue(':ip', $project->getId(), PDO::PARAM_INT);
+        $Q = $DBH->prepare('INSERT INTO ' . System::TABLE_TASKS . ' (parentTask, dateCreated) VALUES (:pt, :dc)');
         $Q->bindValue(':pt', $parentTask);
         $Q->bindValue(':dc', time());
         $Q->execute();
-        return new self($DBH->lastInsertId());
+        $newId = $DBH->lastInsertId();
+
+        $Q = $DBH->exec('INSERT INTO ' . System::TABLE_PROJECT_TASKS . ' (project,task) VALUES (' . $project . ', ' . $newId . ');');
+
+        return new self($newId);
     }
 
     public static function exists($id) {
@@ -64,11 +61,11 @@ class Task implements IModel {
 
     public function update() {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('UPDATE ' . System::TABLE_TASKS . ' SET name=:n, description=:d, dateCompleted=:dc, deadline=:dl, points=:pts, priority=:prio WHERE id_t=:id');
+        $Q = $DBH->prepare('UPDATE ' . System::TABLE_TASKS . ' SET name=:n, description=:d, dateFinished=:dc, deadline=:dl, points=:pts, priority=:prio WHERE id=:id');
         $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
         $Q->bindValue(':n', $this->name, PDO::PARAM_STR);
         $Q->bindValue(':d', $this->description, PDO::PARAM_STR);
-        $Q->bindValue(':dc', $this->dateCompleted, PDO::PARAM_INT);
+        $Q->bindValue(':dc', $this->dateFinished, PDO::PARAM_INT);
         $Q->bindValue(':dl', $this->deadline, PDO::PARAM_INT);
         $Q->bindValue(':pts', $this->points, PDO::PARAM_INT);
         $Q->bindValue(':prio', $this->priority, PDO::PARAM_INT);
@@ -106,12 +103,12 @@ class Task implements IModel {
         return $this;
     }
 
-    public function getDateCompleted() {
-        return $this->dateCompleted;
+    public function getDateFinished() {
+        return $this->dateFinished;
     }
 
-    public function setDateCompleted($dateCompleted) {
-        $this->dateCompleted = $dateCompleted;
+    public function setDateFinished($dateFinished) {
+        $this->dateFinished = $dateFinished;
         return $this;
     }
 
@@ -142,20 +139,35 @@ class Task implements IModel {
         return $this;
     }
 
-    public function getUser() {
-        return $this->user;
-    }
+//    public function getUser() {
+//        return $this->user;
+//    }
 
     public function getDateCreated() {
         return $this->dateCreated;
     }
 
-    public function getProject() {
-        return $this->project;
-    }
+//    public function getProject() {
+//        return $this->project;
+//    }
 
     public function getParentTask() {
         return $this->parentTask;
+    }
+
+    public function hasSubTasks() {
+        $dbh = System::getInstance()->getDBH();
+        $q = $dbh->query('select id from ' . System::TABLE_TASKS . ' where parentTask is not null && parentTask = ' . $this->id);
+        return $q->rowCount() ? true : false;
+    }
+
+    public function getSubTasks() {
+        $ret = array();
+        $dbh = System::getInstance()->getDBH();
+        foreach ($dbh->query('select id from ' . System::TABLE_TASKS . ' where parentTask is not null && parentTask = ' . $this->id) as $r) {
+            $ret[] = new Task($r['id']);
+        }
+        return $ret;
     }
 
 }

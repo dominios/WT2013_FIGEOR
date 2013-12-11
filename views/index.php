@@ -25,13 +25,9 @@
                         <?
                         $user = new Figeor\Models\User(1);
                         foreach (Figeor\Models\Project::fetchByUser($user) as $p):
-                            echo $p->getName() . "<br>";
+                            echo '<a href="/projects/view/' . $p->getId() . '">' . $p->getName() . '</a><br>';
                         endforeach;
                         ?>
-                        <!--                        <a href="/projects/view/1">Webové technológie</a><br>
-                                                <a href="/projects/view/2">Stavba počítačov</a><br>
-                                                <a href="/projects/view/3">Konštrukcia prekladačov</a><br>
-                                                <a href="/projects/view/3">Administrácia databáz</a>-->
                         <br><br>
                         <a href="/index/profil">-> Môj profil</a><br>
                         <a href="/projects/admin">-> Spravovať projekty</a>
