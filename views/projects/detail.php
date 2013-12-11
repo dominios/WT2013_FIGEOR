@@ -28,7 +28,8 @@ foreach ($this->tasks as $task):
 
     // cp
     echo '<div style="float: right;">';
-    echo '<a href="/tasks/edit/' . $task->getId() . '">[upraviť]</a>';
+    echo '<a href="/tasks/edit/' . $task->getId() . '">[upraviť]</a> ';
+    echo '<a href="/tasks/delete/' . $task->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a>';
     echo '</div>';
 
     echo '<div style="clear: both;"></div>';

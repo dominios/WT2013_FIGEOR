@@ -78,7 +78,11 @@ class Task implements IModel {
 
     public function delete() {
         $DBH = System::getInstance()->getDBH();
-        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECTS . ' WHERE id_p=' . $this->id);
+        $DBH->exec('DELETE FROM ' . System::TABLE_TASKS . ' WHERE id=' . $this->id);
+        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECT_TASKS . ' WHERE task=' . $this->id);
+        foreach ($this->getSubTasks() as $sub) {
+            $sub->delete();
+        }
     }
 
     public function getId() {
