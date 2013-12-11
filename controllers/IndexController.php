@@ -18,5 +18,13 @@ class IndexController extends AbstractController {
         return $ret;
     }
 
+    protected function profil() {
+        $view = new View('index/profil.php');
+        $ret = array();
+        $ret['title'] = 'Môj profil';
+        $ret['main'] = $view->renderToString();
+        return $ret;
+    }
+
 }
 

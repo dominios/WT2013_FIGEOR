@@ -12,28 +12,28 @@ class Project implements IModel {
     private $name;
     private $description;
     private $dateCreated;
-    private $dateCompleted;
+    private $dateFinished;
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_PROJECTS . ' WHERE id_p=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_PROJECTS . ' WHERE id=:i LIMIT 1');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         if ($Q->rowCount()) {
             $R = $Q->fetch();
-            $this->id = $R['id_p'];
-            $this->user = new User($R['id_u']);
+            $this->id = $R['id'];
+            $this->user = new User($R['id']);
             $this->name = $R['name'];
             $this->description = $R['description'];
             $this->dateCreated = $R['dateCreated'];
-            $this->dateCompleted = $R['dateCompleted'];
+            $this->dateFinished = $R['dateFinished'];
         }
     }
 
     public static function create($initialValues) {
         $user = $initialValues['user'];
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('INSET INTO ' . System::TABLE_PROJECTS . ' (id_u, dateCreated) VALUES (:iu, :dc)');
+        $Q = $DBH->prepare('INSERT INTO ' . System::TABLE_PROJECTS . ' (id_u, dateCreated) VALUES (:iu, :dc)');
         $Q->bindValue(':iu', $user->getId(), PDO::PARAM_INT);
         $Q->bindValue(':dc', time());
         $Q->execute();
@@ -48,13 +48,22 @@ class Project implements IModel {
         return $Q->rowCount() ? true : false;
     }
 
+    public static function fetchByUser(User $user) {
+        $DBH = System::getInstance()->getDBH();
+        $ret = array();
+        foreach ($DBH->query('SELECT * FROM ' . System::TABLE_USER_PROJECTS . ' WHERE user="' . $user->getId() . '"') as $r) {
+            $ret[] = new Project($r['project']);
+        }
+        return $ret;
+    }
+
     public function update() {
         $DBH = System::getInstance()->getDBH();
         $Q = $DBH->prepare('UPDATE ' . System::TABLE_PROJECTS . ' SET name=:n, description=:d, dateCompleted=:dc WHERE id_p=:id');
         $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
         $Q->bindValue(':n', $this->name, PDO::PARAM_STR);
         $Q->bindValue(':d', $this->description, PDO::PARAM_STR);
-        $Q->bindValue(':dc', $this->dateCompleted, PDO::PARAM_INT);
+        $Q->bindValue(':dc', $this->dateFinished, PDO::PARAM_INT);
         $Q->execute();
     }
 
@@ -89,12 +98,12 @@ class Project implements IModel {
         return $this;
     }
 
-    public function getDateCompleted() {
-        return $this->dateCompleted;
+    public function getDateFinished() {
+        return $this->dateFinished;
     }
 
-    public function setDateCompleted($dateCompleted) {
-        $this->dateCompleted = $dateCompleted;
+    public function setDateFinished($dateFinished) {
+        $this->dateFinished = $dateFinished;
         return $this;
     }
 

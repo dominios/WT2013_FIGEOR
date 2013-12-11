@@ -9,7 +9,7 @@ session_start();
 mb_internal_encoding("UTF-8");
 error_reporting(E_ALL);
 spl_autoload_register('\Figeor\class_autoloader', true);
-$system = \Figeor\Core\System::getInstance();
+\Figeor\Core\System::getInstance();
 
 function class_autoloader($class_name) {
 
@@ -20,6 +20,7 @@ function class_autoloader($class_name) {
     /* tieto zlozky nacita cele */
     $autoloadDirectories = array();
     $autoloadDirectories[] = 'core';
+    $autoloadDirectories[] = 'models';
 
     foreach ($autoloadDirectories as $dir) {
         $dh = \opendir($dir);

@@ -15,12 +15,12 @@ class User implements IModel {
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_USERS . ' WHERE id_u=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT * FROM ' . System::TABLE_USERS . ' WHERE id=:i LIMIT 1');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         if ($Q->rowCount()) {
             $R = $Q->fetch();
-            $this->id = $R['id_u'];
+            $this->id = $R['id'];
             $this->name = $R['name'];
             $this->surname = $R['surname'];
             $this->email = $R['email'];

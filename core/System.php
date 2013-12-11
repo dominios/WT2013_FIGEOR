@@ -12,6 +12,10 @@ class System {
     const TABLE_ATTACHMENTS = 'files';
     const TABLE_TASKS = 'tasks';
     const TABLE_REMINDERS = 'reminders';
+    const TABLE_USER_PROJECTS = 'user_projects';
+    const TABLE_PROJECT_TASKS = 'project_tasks';
+    const TABLE_TASK_REMINDERS = 'task_reminders';
+    const TABLE_TASK_ATTACHMENTS = 'task_files';
 
     private $DBH;
     private static $instance = null;
@@ -44,6 +48,7 @@ class System {
             header("HTTP/1.1 503 Service Unavailable");
             die('Nepodarilo sa spojisť s databázou!');
         }
+        return $DBH;
     }
 
     /**
