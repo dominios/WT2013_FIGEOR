@@ -17,6 +17,13 @@ class AbstractController {
     }
 
     public static function parseURL() {
+
+        if (sizeof($_POST) && isset($_POST['action'])) {
+            $action = preg_replace('/^./', '', $_POST['action']);
+            $arr = explode('/', $action, 2);
+            return array('controller' => $arr[0], 'action' => $arr[1]);
+        }
+
         $action = '';
         $request = $_SERVER['REQUEST_URI'];
         $keys = explode('/', $request, 4);
