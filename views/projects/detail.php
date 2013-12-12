@@ -23,7 +23,12 @@ foreach ($this->tasks as $task):
     echo '</div>';
 
     echo '<div class="attachments">';
-    echo '[prílohy]';
+    if (sizeof($task->getAttachments())) {
+        foreach ($task->getAttachments() as $att):
+            echo '<a href="/' . $att->getUrl() . '" target="_blank">[' . $att->getName() . ']</a> ';
+        endforeach;
+    }
+    echo ' <a href="/tasks/addAttachment/task/' . $task->getId() . '">[pridať prílohu]</a>';
     echo '</div>';
 
     // cp

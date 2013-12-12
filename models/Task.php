@@ -16,6 +16,7 @@ class Task implements IModel {
     private $deadline;
     private $points;
     private $priority;
+    private $attachments;
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
@@ -33,6 +34,7 @@ class Task implements IModel {
             $this->deadline = $R['deadline'];
             $this->points = $R['points'];
             $this->priority = $R['priority'];
+            $this->attachments = $this->fetchAttachments();
         }
     }
 
@@ -143,9 +145,15 @@ class Task implements IModel {
         return $this;
     }
 
-//    public function getUser() {
-//        return $this->user;
-//    }
+    public function getUser() {
+        $dbh = System::getInstance()->getDBH();
+        $r = $dbh->query('SELECT u.id AS uid
+            FROM ' . System::TABLE_USERS . ' u
+            JOIN ' . System::TABLE_USER_PROJECTS . ' up ON u.id = up.user
+            JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON up.project = pt.task
+            WHERE pt.task = ' . $this->id . ';')->fetch();
+        return new User($r['uid']);
+    }
 
     public function getDateCreated() {
         return $this->dateCreated;
@@ -153,7 +161,10 @@ class Task implements IModel {
 
     public function getProject() {
         $dbh = System::getInstance()->getDBH();
-        $r = $dbh->query('select *, p.id as pid from ' . System::TABLE_PROJECTS . ' p join ' . System::TABLE_PROJECT_TASKS . ' pt on p.id=pt.project where pt.task=' . $this->getId())->fetch();
+        $r = $dbh->query('SELECT p.id AS pid
+            FROM ' . System::TABLE_PROJECTS . ' p
+            JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON p.id = pt.project
+            WHERE pt.task = ' . $this->getId() . ';')->fetch();
         return new Project($r['pid']);
     }
 
@@ -163,17 +174,36 @@ class Task implements IModel {
 
     public function hasSubTasks() {
         $dbh = System::getInstance()->getDBH();
-        $q = $dbh->query('select id from ' . System::TABLE_TASKS . ' where parentTask is not null && parentTask = ' . $this->id);
+        $q = $dbh->query('SELECT id
+            FROM ' . System::TABLE_TASKS . '
+            WHERE parentTask IS NOT NULL && parentTask = ' . $this->id . ';');
         return $q->rowCount() ? true : false;
     }
 
     public function getSubTasks() {
         $ret = array();
         $dbh = System::getInstance()->getDBH();
-        foreach ($dbh->query('select id from ' . System::TABLE_TASKS . ' where parentTask is not null && parentTask = ' . $this->id) as $r) {
+        foreach ($dbh->query('SELECT id
+            FROM ' . System::TABLE_TASKS . '
+            WHERE parentTask IS NOT NULL && parentTask = ' . $this->id . ';') as $r) {
             $ret[] = new Task($r['id']);
         }
         return $ret;
+    }
+
+    public function fetchAttachments() {
+        $ret = array();
+        $dbh = System::getInstance()->getDBH();
+        foreach ($dbh->query('SELECT a.id FROM ' . System::TABLE_ATTACHMENTS . ' a
+            JOIN ' . System::TABLE_TASK_ATTACHMENTS . ' ta ON a.id = ta.file
+            WHERE ta.task = ' . $this->getId() . ';') as $r) {
+            $ret[] = new Attachment($r['id']);
+        }
+        return $ret;
+    }
+
+    public function getAttachments() {
+        return $this->attachments;
     }
 
 }

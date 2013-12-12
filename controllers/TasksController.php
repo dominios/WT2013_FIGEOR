@@ -6,6 +6,7 @@ use Figeor\Core\View;
 use Figeor\Models\Task;
 use Figeor\Models\Project;
 use Figeor\Core\System;
+use Figeor\Models\Attachment;
 
 class TasksController extends AbstractController {
 
@@ -66,6 +67,27 @@ class TasksController extends AbstractController {
             $task->delete();
         }
         $this->redirect('/projects/view/' . $project->getId());
+    }
+
+    protected function addAttachment() {
+        $view = new View('tasks/addAttachment.php');
+        $ret = array();
+        $ret['title'] = 'Upload prílohy';
+        $ret['main'] = $view->renderToString();
+        return $ret;
+    }
+
+    protected function attachmentSubmit() {
+        if ($_FILES["fileUrl"]["error"] > 0) {
+            echo "Error: " . $_FILES["fileUrl"]["error"] . "<br>";
+            die;
+        } else {
+            $initials = array('files' => $_FILES, 'task' => $_POST['taskId'], 'fileName' => $_POST['fileName']);
+            Attachment::create($initials);
+            $task = new Task($_POST['taskId']);
+            $project = $task->getProject();
+            $this->redirect('/projects/view/' . $project->getId());
+        }
     }
 
 }

@@ -84,7 +84,7 @@ class Reminder implements IModel {
         return $this->task;
     }
 
-    public function getSrc() {
+    public function getUrl() {
         return $this->src;
     }
 
