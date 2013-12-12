@@ -15,11 +15,11 @@ foreach ($this->tasks as $task):
         echo '<ul>';
         $tasks = $task->getSubTasks();
         foreach ($tasks as $t):
-            echo '<li>' . $t->getName() . '</li>';
+            echo '<li>' . $t->getName() . ' <a href="/tasks/delete/' . $t->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a></li>';
         endforeach;
         echo '</ul>';
     }
-    echo '<button onclick="javascript: window.location = \'/tasks/add/project/' . $this->project->getId() . '/task/' . $t->getId() . '\';">Pridať podúlohu</button>';
+    echo '<button onclick="javascript: window.location = \'/tasks/add/project/' . $this->project->getId() . '/task/' . $task->getId() . '\';">Pridať podúlohu</button>';
     echo '</div>';
 
     echo '<div class="attachments">';

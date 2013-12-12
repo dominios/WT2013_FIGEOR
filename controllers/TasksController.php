@@ -62,9 +62,10 @@ class TasksController extends AbstractController {
     protected function delete() {
         if (isset($_GET['id'])) {
             $task = new Task($_GET['id']);
+            $project = $task->getProject();
             $task->delete();
         }
-        $this->redirect('/projects/view/');
+        $this->redirect('/projects/view/' . $project->getId());
     }
 
 }

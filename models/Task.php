@@ -151,9 +151,11 @@ class Task implements IModel {
         return $this->dateCreated;
     }
 
-//    public function getProject() {
-//        return $this->project;
-//    }
+    public function getProject() {
+        $dbh = System::getInstance()->getDBH();
+        $r = $dbh->query('select *, p.id as pid from ' . System::TABLE_PROJECTS . ' p join ' . System::TABLE_PROJECT_TASKS . ' pt on p.id=pt.project where pt.task=' . $this->getId())->fetch();
+        return new Project($r['pid']);
+    }
 
     public function getParentTask() {
         return $this->parentTask;
