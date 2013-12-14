@@ -33,18 +33,20 @@ class Project implements IModel {
     }
 
     public static function create($initialValues) {
-        $user = $initialValues['user'];
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('INSERT INTO ' . System::TABLE_PROJECTS . ' (id_u, dateCreated) VALUES (:iu, :dc)');
-        $Q->bindValue(':iu', $user->getId(), PDO::PARAM_INT);
+        $Q = $DBH->prepare('INSERT INTO ' . System::TABLE_PROJECTS . ' (name, user, dateCreated) VALUES (:n, :iu, :dc);');
+        $Q->bindValue(':iu', System::currentUser()->getId(), PDO::PARAM_INT);
         $Q->bindValue(':dc', time());
+        $Q->bindValue(':n', 'Nový projekt');
         $Q->execute();
-        return new self($DBH->lastInsertId());
+        $newId = $DBH->lastInsertId();
+        $DBH->exec('INSERT INTO ' . System::TABLE_USER_PROJECTS . ' (user,project) VALUES (' . System::currentUser()->getId() . ', ' . $newId . ');');
+        return new self($newId);
     }
 
     public static function exists($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_PROJECTS . ' WHERE id_p=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_PROJECTS . ' WHERE id = :i LIMIT 1');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         return $Q->rowCount() ? true : false;
@@ -53,7 +55,7 @@ class Project implements IModel {
     public static function fetchByUser(User $user) {
         $DBH = System::getInstance()->getDBH();
         $ret = array();
-        foreach ($DBH->query('SELECT * FROM ' . System::TABLE_USER_PROJECTS . ' WHERE user="' . $user->getId() . '"') as $r) {
+        foreach ($DBH->query('SELECT * FROM ' . System::TABLE_USER_PROJECTS . ' WHERE user = "' . $user->getId() . '"') as $r) {
             $ret[] = new Project($r['project']);
         }
         return $ret;
@@ -61,7 +63,7 @@ class Project implements IModel {
 
     public function update() {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('UPDATE ' . System::TABLE_PROJECTS . ' SET name=:n, description=:d, dateCompleted=:dc WHERE id_p=:id');
+        $Q = $DBH->prepare('UPDATE ' . System::TABLE_PROJECTS . ' SET name = :n, description = :d, dateFinished = :dc WHERE id = :id');
         $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
         $Q->bindValue(':n', $this->name, PDO::PARAM_STR);
         $Q->bindValue(':d', $this->description, PDO::PARAM_STR);
@@ -75,7 +77,7 @@ class Project implements IModel {
 
     public function delete() {
         $DBH = System::getInstance()->getDBH();
-        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECTS . ' WHERE id_p=' . $this->id);
+        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECTS . ' WHERE id_p = ' . $this->id);
     }
 
     public function getId() {
@@ -111,7 +113,7 @@ class Project implements IModel {
 
     public function getNumberOfTasks($includeSubTasks = false) {
         $DBH = System::getInstance()->getDBH();
-        $R = $DBH->query('SELECT COUNT(*) FROM ' . System::TABLE_PROJECT_TASKS . ' WHERE project="' . $this->id . '"')->fetch();
+        $R = $DBH->query('SELECT COUNT(*) FROM ' . System::TABLE_PROJECT_TASKS . ' WHERE project = "' . $this->id . '"')->fetch();
         return $R['COUNT(*)'];
     }
 
@@ -122,7 +124,7 @@ class Project implements IModel {
     private function fetchTasks() {
         $DBH = System::getInstance()->getDBH();
         $ret = array();
-        foreach ($DBH->query('SELECT task FROM ' . System::TABLE_PROJECT_TASKS . ' pt JOIN ' . System::TABLE_TASKS . ' t ON pt.task = t.id WHERE project="' . $this->id . '" && parentTask IS NULL') as $R) {
+        foreach ($DBH->query('SELECT task FROM ' . System::TABLE_PROJECT_TASKS . ' pt JOIN ' . System::TABLE_TASKS . ' t ON pt.task = t.id WHERE project = "' . $this->id . '" && parentTask IS NULL') as $R) {
             $ret[] = new Task($R['task']);
         }
         return $ret;

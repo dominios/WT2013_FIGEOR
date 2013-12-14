@@ -37,7 +37,7 @@ class IndexController extends AbstractController {
             $user->setName($_POST['userName']);
             $user->setUseReminders($_POST['userReminders']);
             $user->update();
-            if (md5($_POST['userPass1']) == $user->getPassword() && strlen($_POST['userPass1'])) {
+            if (md5($_POST['userPass1']) == $user->getPassword()) {
                 if ($_POST['userPass2'] === $_POST['userPass3'] && strlen($_POST['userPass2'])) {
                     $user->setPassword(md5($_POST['userPass2']));
                 }

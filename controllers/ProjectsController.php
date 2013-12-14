@@ -45,4 +45,33 @@ class ProjectsController extends AbstractController {
         return $ret;
     }
 
+    protected function edit() {
+        if (!Project::exists($_GET['id'])) {
+            $this->redirect('/projects/admin');
+        }
+        $project = new Project($_GET['id']);
+        $view = new View('projects/form.php');
+        $view->project = $project;
+        $ret = array();
+        $ret['title'] = 'Upraviť projekt';
+        $ret['main'] = $view->renderToString();
+        return $ret;
+    }
+
+    protected function update() {
+        if (!Project::exists($_POST['projectId'])) {
+            $this->redirect('/projects/admin');
+        }
+        $project = new Project($_POST['projectId']);
+        $project->setName($_POST['projectName']);
+        $project->setDescription($_POST['projectDescription']);
+        $project->update();
+        $this->redirect('/projects/admin');
+    }
+
+    protected function create() {
+        $project = Project::create(array('name' => 'Nový projekt'));
+        $this->redirect('/projects/edit/' . $project->getId());
+    }
+
 }
