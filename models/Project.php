@@ -127,6 +127,9 @@ class Project implements IModel {
             JOIN  ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
             WHERE pt.project = ' . $this->getId() . ' && dateCreated IS NOT NULL && dateFinished IS NOT NULL
         ;')->fetch();
+        if ($r['greatest'] === null) {
+            $r['greatest'] = $this->dateCreated;
+        }
         return $format === null ? $r['greatest'] : date($format, $r['greatest']);
     }
 
