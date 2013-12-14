@@ -12,6 +12,7 @@ class User implements IModel {
     private $surname;
     private $email;
     private $password;
+    private $reminders;
 
     public function __construct($id) {
         $DBH = System::getInstance()->getDBH();
@@ -24,12 +25,14 @@ class User implements IModel {
             $this->name = $R['name'];
             $this->surname = $R['surname'];
             $this->email = $R['email'];
+            $this->password = $R['password'];
+            $this->reminders = (bool) $R['reminders'];
         }
     }
 
     public static function create($initialValues) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('INSET INTO ' . System::TABLE_USERS . ' (email) VALUES (:em)');
+        $Q = $DBH->prepare('INSERT INTO ' . System::TABLE_USERS . ' (email) VALUES (:em)');
         $Q->bindValue(':em', $initialValues['email'], PDO::PARAM_STR);
         $Q->execute();
         return new self($DBH->lastInsertId());
@@ -37,7 +40,7 @@ class User implements IModel {
 
     public static function exists($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_USERS . ' WHERE id_u=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_USERS . ' WHERE id=:i LIMIT 1');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         return $Q->rowCount() ? true : false;
@@ -45,11 +48,12 @@ class User implements IModel {
 
     public function update() {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('UPDATE ' . System::TABLE_USERS . ' SET name=:n, surname=:sn, email=:em WHERE id_u=:id');
+        $Q = $DBH->prepare('UPDATE ' . System::TABLE_USERS . ' SET name=:n, surname=:sn, email=:em, reminders=:r WHERE id=:id');
         $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
         $Q->bindValue(':n', $this->name, PDO::PARAM_STR);
         $Q->bindValue(':sn', $this->surname, PDO::PARAM_STR);
         $Q->bindValue(':em', $this->email, PDO::PARAM_INT);
+        $Q->bindValue(':r', $this->reminders, PDO::PARAM_INT);
         $Q->execute();
     }
 
@@ -68,6 +72,10 @@ class User implements IModel {
 
     public function getName() {
         return $this->name;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
     }
 
     public function getSurname() {
@@ -93,7 +101,20 @@ class User implements IModel {
     }
 
     public function setPassword($password) {
-        /* todo */
+        $this->password = $password;
+        $DBH = System::getInstance()->getDBH();
+        $Q = $DBH->prepare('UPDATE ' . System::TABLE_USERS . ' SET password=:p WHERE id=:id');
+        $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $Q->bindValue(':p', $this->password, PDO::PARAM_STR);
+        $Q->execute();
+    }
+
+    public function useReminders() {
+        return (bool) $this->reminders;
+    }
+
+    public function setUseReminders($bool) {
+        $this->reminders = (bool) $bool;
     }
 
 }
