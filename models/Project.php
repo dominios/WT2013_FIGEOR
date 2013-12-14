@@ -105,8 +105,8 @@ class Project implements IModel {
         return $this;
     }
 
-    public function getDateFinished() {
-        return $this->dateFinished;
+    public function getDateFinished($format = null) {
+        return $format === null ? $this->dateFinished : date($format, $this->dateFinished);
     }
 
     public function setDateFinished($dateFinished) {
@@ -146,8 +146,8 @@ class Project implements IModel {
         return $this->tasks;
     }
 
-    public function getDeadline() {
-        return $this->deadline;
+    public function getDeadline($format = null) {
+        return $format === null ? $this->deadline : date($format, $this->deadline);
     }
 
     public function setDeadline($deadline) {

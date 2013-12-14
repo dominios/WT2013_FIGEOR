@@ -3,7 +3,7 @@
 foreach ($this->tasks as $task):
     echo '<div class="task" style="margin: 15px 0; padding: 5px; border: 1px solid #ccc;">';
     echo '<strong>' . $task->getName() . '</strong>';
-    echo ', termín: ' . $task->getDeadline();
+    echo ', termín: ' . $task->getDeadline('d.m.Y H:i:s');
     echo ', priorita: ' . $task->getPriority();
     echo ', body: ' . $task->getPoints();
 

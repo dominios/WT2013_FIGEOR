@@ -51,7 +51,7 @@ class TasksController extends AbstractController {
             }
             $task = Task::create($initialValues);
         }
-        $task->setDeadline($_POST['taskDeadline']);
+        $task->setDeadline(strtotime($_POST['taskDeadline']));
         $task->setName($_POST['taskName']);
         $task->setDescription($_POST['taskDescription']);
         $task->setPoints($_POST['taskPoints']);

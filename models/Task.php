@@ -132,8 +132,8 @@ class Task implements IModel {
         return $this;
     }
 
-    public function getDeadline() {
-        return $this->deadline;
+    public function getDeadline($format = null) {
+        return $format === null ? $this->deadline : date($format, $this->deadline);
     }
 
     public function setDeadline($deadline) {

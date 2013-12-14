@@ -32,7 +32,7 @@
             <tr>
                 <td>Deadline:</td>
                 <td>
-                    <input type="text" name="taskDeadline" value="<?= $this->task !== null ? $this->task->getDeadline() : ''; ?>">
+                    <input type="datetime-local" name="taskDeadline" value="<?= $this->task !== null ? $this->task->getDeadline('Y-m-d\TH:i:s') : ''; ?>">
                 </td>
             </tr>
             <tr>
