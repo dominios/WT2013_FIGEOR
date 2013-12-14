@@ -12,6 +12,7 @@ class Project implements IModel {
     private $name;
     private $description;
     private $dateCreated;
+    private $deadline;
     private $dateFinished;
     private $tasks;
 
@@ -28,6 +29,7 @@ class Project implements IModel {
             $this->description = $R['description'];
             $this->dateCreated = $R['dateCreated'];
             $this->dateFinished = $R['dateFinished'];
+            $this->deadline = $R['deadline'];
             $this->tasks = $this->fetchTasks();
         }
     }
@@ -63,11 +65,12 @@ class Project implements IModel {
 
     public function update() {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('UPDATE ' . System::TABLE_PROJECTS . ' SET name = :n, description = :d, dateFinished = :dc WHERE id = :id');
+        $Q = $DBH->prepare('UPDATE ' . System::TABLE_PROJECTS . ' SET name = :n, description = :d, dateFinished = :dc, deadline=:dl WHERE id = :id');
         $Q->bindValue(':id', $this->id, PDO::PARAM_INT);
         $Q->bindValue(':n', $this->name, PDO::PARAM_STR);
         $Q->bindValue(':d', $this->description, PDO::PARAM_STR);
         $Q->bindValue(':dc', $this->dateFinished, PDO::PARAM_INT);
+        $Q->bindValue(':dl', $this->deadline, PDO::PARAM_INT);
         $Q->execute();
     }
 
@@ -132,6 +135,15 @@ class Project implements IModel {
 
     public function getTasks() {
         return $this->tasks;
+    }
+
+    public function getDeadline() {
+        return $this->deadline;
+    }
+
+    public function setDeadline($deadline) {
+        $this->deadline = $deadline;
+        return $this;
     }
 
 }
