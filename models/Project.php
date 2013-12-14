@@ -120,8 +120,14 @@ class Project implements IModel {
         return $R['COUNT(*)'];
     }
 
-    public function getLastActivity() {
-        return "TODO";
+    public function getLastActivity($format = null) {
+        $DBH = System::getInstance()->getDBH();
+        $r = $DBH->query('SELECT GREATEST(dateCreated,dateFinished) AS greatest
+            FROM ' . System::TABLE_TASKS . ' t
+            JOIN  ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
+            WHERE pt.project = ' . $this->getId() . ' && dateCreated IS NOT NULL && dateFinished IS NOT NULL
+        ;')->fetch();
+        return $format === null ? $r['greatest'] : date($format, $r['greatest']);
     }
 
     private function fetchTasks() {

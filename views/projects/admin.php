@@ -5,7 +5,7 @@
         echo '<tr>
             <td>' . $project->getName() . '</td>
             <td>' . $project->getNumberOfTasks() . '</td>
-            <td>' . $project->getLastActivity() . '</td>
+            <td>' . $project->getLastActivity('d.m.Y H:i:s') . '</td>
             <td>
                 <a href="/projects/view/' . $project->getId() . '">[úlohy]</a>
                 <a href="/projects/edit/' . $project->getId() . '">[upraviť]</a>
