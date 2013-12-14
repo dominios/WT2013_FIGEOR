@@ -1,0 +1,5 @@
+/* takto spravit vsetky ikonky a nakopcit ich do adresara! */
+
+span.icon.icon-hocico {
+    background-image: url('../img/hocico.png');
+}
