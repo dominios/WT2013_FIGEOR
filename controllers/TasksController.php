@@ -90,4 +90,13 @@ class TasksController extends AbstractController {
         }
     }
 
+    protected function markAsDone() {
+        if (Task::exists($_GET['id'])) {
+            $task = new Task($_GET['id']);
+            $task->setDateFinished(time());
+            $task->update();
+            $this->redirect('/projects/view/' . $task->getProject()->getId());
+        }
+    }
+
 }

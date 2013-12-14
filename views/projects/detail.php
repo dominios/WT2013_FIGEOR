@@ -15,7 +15,15 @@ foreach ($this->tasks as $task):
         echo '<ul>';
         $tasks = $task->getSubTasks();
         foreach ($tasks as $t):
-            echo '<li>' . $t->getName() . ' <a href="/tasks/delete/' . $t->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a></li>';
+            echo '<li>';
+            echo $t->getName();
+            if ($t->isFinished()) {
+                echo ' [done]';
+            } else {
+                echo ' <a href="/tasks/markAsDone/' . $t->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');">[complete]</a>';
+            }
+            echo ' <a href="/tasks/delete/' . $t->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a>';
+            echo '</li>';
         endforeach;
         echo '</ul>';
     }
@@ -33,7 +41,12 @@ foreach ($this->tasks as $task):
 
     // cp
     echo '<div style="float: right;">';
-    echo '<a href="/tasks/edit/' . $task->getId() . '">[upraviť]</a> ';
+    if ($task->isFinished()) {
+        echo ' [done]';
+    } elseif ($task->isFinishable()) {
+        echo ' <a href="/tasks/markAsDone/' . $task->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');">[complete]</a>';
+    }
+    echo '<a href="/tasks/edit/' . $task->getId() . '">[upraviť]</a>';
     echo '<a href="/tasks/delete/' . $task->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a>';
     echo '</div>';
 

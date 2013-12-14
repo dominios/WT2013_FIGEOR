@@ -55,7 +55,7 @@ class Task implements IModel {
 
     public static function exists($id) {
         $DBH = System::getInstance()->getDBH();
-        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_TASKS . ' WHERE id_t=:i LIMIT 1');
+        $Q = $DBH->prepare('SELECT 1 FROM ' . System::TABLE_TASKS . ' WHERE id=:i LIMIT 1');
         $Q->bindValue(':i', $id, PDO::PARAM_INT);
         $Q->execute();
         return $Q->rowCount() ? true : false;
@@ -111,6 +111,20 @@ class Task implements IModel {
 
     public function getDateFinished() {
         return $this->dateFinished;
+    }
+
+    public function isFinished() {
+        return is_numeric($this->dateFinished) ? true : false;
+    }
+
+    public function isFinishable() {
+        $finishable = true;
+        if ($this->hasSubTasks()) {
+            foreach ($this->getSubTasks() as $sub) {
+                $finishable &= $sub->isFinished();
+            }
+        }
+        return $finishable;
     }
 
     public function setDateFinished($dateFinished) {
