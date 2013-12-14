@@ -17,6 +17,10 @@ function class_autoloader($class_name) {
         return;
     }
 
+    /* rucne jednotlive fily */
+    include_once 'controllers/AbstractController.php';
+    include_once 'models/Model.php';
+
     /* tieto zlozky nacita cele */
     $autoloadDirectories = array();
     $autoloadDirectories[] = 'core';
@@ -34,9 +38,6 @@ function class_autoloader($class_name) {
             closedir($dh);
         }
     }
-
-    /* rucne jednotlive fily */
-    include_once 'controllers/AbstractController.php';
 
     // opat test, ak uz nacitalo z tych zloziek
     if (class_exists($class_name)) {
