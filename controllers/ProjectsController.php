@@ -65,7 +65,7 @@ class ProjectsController extends AbstractController {
         $project = new Project($_POST['projectId']);
         $project->setName($_POST['projectName']);
         $project->setDescription($_POST['projectDescription']);
-        $project->setDeadline($_POST['projectDeadline']);
+        $project->setDeadline(strtotime($_POST['projectDeadline']));
         $project->update();
         $this->redirect('/projects/admin');
     }

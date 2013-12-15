@@ -155,5 +155,50 @@ class Project implements IModel {
         return $this;
     }
 
+    public function getPointsOverall() {
+        $dbh = System::getInstance()->getDBH();
+        $r = $dbh->query('SELECT SUM(points) AS sum
+            FROM ' . System::TABLE_TASKS . ' t
+            JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
+            WHERE project = ' . $this->getId() . ';')->fetch();
+        return $r['sum'];
+    }
+
+    public function getBurntPoints() {
+        $dbh = System::getInstance()->getDBH();
+        $r = $dbh->query('SELECT SUM(points) AS sum
+            FROM ' . System::TABLE_TASKS . ' t
+            JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
+            WHERE project = ' . $this->getId() . ' && t.dateFinished IS NOT NULL;')->fetch();
+        return $r['sum'];
+    }
+
+    public function getAllTaskCount() {
+        $dbh = System::getInstance()->getDBH();
+        $r = $dbh->query('SELECT COUNT(*) AS count
+            FROM ' . System::TABLE_TASKS . ' t
+            JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
+            WHERE project = ' . $this->getId() . ';')->fetch();
+        return $r['count'];
+    }
+
+    public function getOverallDurationDays() {
+        $dStart = new \DateTime("@$this->dateCreated");
+        $dEnd = new \DateTime("@" . $this->deadline);
+        $dDiff = $dStart->diff($dEnd);
+        return $dDiff->days;
+    }
+
+    public function getCurrentDay() {
+        $dStart = new \DateTime("@$this->dateCreated");
+        $dEnd = new \DateTime("@" . time());
+        $dDiff = $dStart->diff($dEnd);
+        return $dDiff->days;
+    }
+
+    public function getDateCreated($format = null) {
+        return $format === null ? $this->dateCreated : date($format, $this->dateCreated);
+    }
+
 }
 

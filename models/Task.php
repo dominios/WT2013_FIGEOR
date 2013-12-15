@@ -220,5 +220,17 @@ class Task implements IModel {
         return $this->attachments;
     }
 
+    public function getFinishDay() {
+        if (!$this->isFinished()) {
+            return null;
+        }
+        $project = $this->getProject();
+
+        $dStart = new \DateTime("@" . $project->getDateCreated());
+        $dEnd = new \DateTime("@" . $this->dateFinished);
+        $dDiff = $dStart->diff($dEnd);
+        return $dDiff->days;
+    }
+
 }
 
