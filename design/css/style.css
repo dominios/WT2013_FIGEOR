@@ -196,6 +196,33 @@ input[type='submit']:hover, input[type='button']:hover, button:hover, .button:ho
     opacity: 0.5;
 }
 
+.uloha:first-child {
+    border-top: 1px dotted #bbb;
+}
+
+.uloha {
+    color: inherit;
+    border-bottom: 1px dotted #bbb;
+    padding: 5px;
+    padding-left: 8px;
+}
+
+.uloha:nth-child(odd){
+    background: rgba(220, 220, 220, 0.3);
+}
+
+.uloha.prio1 {
+    background: rgba(255, 0, 0, 0.27)
+}
+
+.uloha.prio2 {
+    background: rgba(225, 240, 50, 0.2)
+}
+
+.uloha.prio3 {
+    background: rgba(240, 50, 217, 0.2)
+}
+
 /* tabulky */
 
 table {
