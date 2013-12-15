@@ -47,7 +47,10 @@ foreach ($project->getTasks() as $task) {
     foreach ($task->getSubTasks() as $sub) {
         $finishDay = $sub->getFinishDay();
         if ($finishDay !== null) {
-            $diffData[--$finishDay] += $sub->getPoints();
+            $index = --$finishDay;
+            if ($index < 0)
+                $index = 0;
+            $diffData[$index] += $sub->getPoints();
         }
     }
 }
