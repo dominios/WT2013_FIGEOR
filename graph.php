@@ -10,7 +10,7 @@ include_once 'plugins/jpgraph/jpgraph_line.php';
 // data - premenne - vypocty
 
 $width = 750;
-$height = 300;
+$height = 350;
 
 $project = new Figeor\Models\Project($_GET['project']);
 $projectDeadline = $project->getDeadline();
@@ -73,18 +73,18 @@ foreach ($diffData as $diff) {
 $graph = new Graph($width, $height);
 $graph->img->SetAntiAliasing(true);
 $graph->SetScale('intint');
-$graph->title->Set('BURNDOWN CHART');
+$graph->title->Set('GRAF SPAĽOVANIA');
 $graph->xaxis->title->Set('dni');
 $graph->yaxis->title->Set('body');
 $graph->yaxis->HideZeroLabel();
 $graph->xaxis->SetTickLabels($daysData);
 
 $lineplotOptimal = new LinePlot($optimalData);
-$lineplotOptimal->SetLegend('Optimálna krivka');
+$lineplotOptimal->SetLegend('Optimálny priebeh');
 $graph->Add($lineplotOptimal);
 
 $lineplotReal = new LinePlot($realData);
-$lineplotReal->SetLegend('Reálna krivka');
+$lineplotReal->SetLegend('Reálny priebeh');
 $graph->Add($lineplotReal);
 $graph->Stroke();
 
