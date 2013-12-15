@@ -1,14 +1,13 @@
 
 <section id="graphs" style="margin: 25px 0 ;">
-    [STATS START]
     <p>
         <?
-        $projectDeadlie = $this->project->getDeadline();
+        $projectDeadline = $this->project->getDeadline();
         $projectDeadlieFormated = $this->project->getDeadline('d.m.Y H:i:s');
         $projectPoints = $this->project->getPointsOverall();
         $projectTasks = $this->project->getAllTaskCount();
 
-        $dStart = new DateTime("@$projectDeadlie");
+        $dStart = new DateTime("@$projectDeadline");
         $dEnd = new DateTime("@" . time());
         $dDiff = $dStart->diff($dEnd);
         $projectDaysLeft = $dDiff->days;
@@ -19,13 +18,12 @@
         Celkový deadline: <?= $projectDeadlieFormated ?><br>
         Celkom počet bodov: <?= $projectPoints; ?><br>
         Celkom počet úloh: <?= $projectTasks; ?><br>
-        Počet dní: <?= $projectDaysLeft; ?><br>
-        Priemerne spáliť: <?= $projectAvgBurnout; ?><br>
+        Zostáva dní: <?= $projectDaysLeft; ?><br>
+        Priemerne treba spáliť: <?= $projectAvgBurnout; ?><br>
         Spálené / zostáva: <?= $projectBurntPoints . ' / ' . ($projectPoints - $projectBurntPoints); ?>
 
         <img src="/graph.php?project=<?= $this->project->getId(); ?>">
     </p>
-    [STATS END]
 </section>
 
 <h3>Zoznam úloh pre projekt <?= $this->project->getName(); ?>:</h3>
@@ -33,7 +31,7 @@
 foreach ($this->tasks as $task):
     echo '<div class="task" style="margin: 15px 0; padding: 5px; border: 1px solid #ccc;">';
     echo '<strong>' . $task->getName() . '</strong>';
-//    echo ', termín: ' . $task->getDeadline('d.m.Y H:i:s');
+    echo ', termín: ' . $task->getDeadline('d.m.Y H:i:s');
     echo ', priorita: ' . $task->getPriority();
     echo ', body: ' . $task->getPoints();
 

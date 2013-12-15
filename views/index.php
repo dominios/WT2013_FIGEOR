@@ -13,7 +13,8 @@
                 <a href="/tasks/view/days/1">dnes</a> |
                 <a href="/tasks/view/days/2">2 dni</a> |
                 <a href="/tasks/view/days/7">7 dní</a> |
-                <a href="/tasks/view/days/30">30 dní</a>
+                <a href="/tasks/view/days/30">30 dní</a> |
+                <a href="/tasks/view">všetky</a>
             </header>
 
             <section id="innerContainer">

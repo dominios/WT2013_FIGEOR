@@ -121,10 +121,11 @@ class User implements IModel {
         $dbh = System::getInstance()->getDBH();
         $ret = array();
         $timeLimit = time() + ($days * 24 * 3600);
+        $timeCondition = $days !== false ? ' && t.deadline <= ' . $timeLimit : '';
         foreach ($dbh->query('SELECT t.id AS taskId FROM ' . System::TABLE_TASKS . ' t
             JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
             JOIN ' . System::TABLE_USER_PROJECTS . ' up ON up.project = pt.project
-            WHERE up.user = ' . System::currentUser()->getId() . ' && t.dateFinished IS NULL && t.deadline <= ' . $timeLimit . '
+            WHERE up.user = ' . System::currentUser()->getId() . ' && t.dateFinished IS NULL && t.deadline >= ' . time() . $timeCondition . '
             ORDER BY
                 CASE WHEN t.deadline > 0 && t.deadline IS NOT NULL THEN 0 ELSE 1 END ASC,
                 CASE WHEN t.priority != 0 && t.priority IS NOT NULL THEN 0 ELSE 1 END ASC;') as $r) {

@@ -170,7 +170,7 @@ class Project implements IModel {
             FROM ' . System::TABLE_TASKS . ' t
             JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
             WHERE project = ' . $this->getId() . ' && t.dateFinished IS NOT NULL;')->fetch();
-        return $r['sum'];
+        return $r['sum'] == null ? 0 : $r['sum'];
     }
 
     public function getAllTaskCount() {

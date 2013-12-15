@@ -13,11 +13,11 @@ $width = 750;
 $height = 300;
 
 $project = new Figeor\Models\Project($_GET['project']);
-$projectDeadlie = $project->getDeadline();
+$projectDeadline = $project->getDeadline();
 $projectDeadlieFormated = $project->getDeadline('d.m.Y H:i:s');
 $projectPoints = $project->getPointsOverall();
 $projectTasks = $project->getAllTaskCount();
-$dStart = new DateTime("@$projectDeadlie");
+$dStart = new DateTime("@$projectDeadline");
 $dEnd = new DateTime("@" . time());
 $dDiff = $dStart->diff($dEnd);
 $projectDaysLeft = $dDiff->days;
