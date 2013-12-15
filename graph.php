@@ -73,7 +73,7 @@ foreach ($diffData as $diff) {
 $graph = new Graph($width, $height);
 $graph->img->SetAntiAliasing(true);
 $graph->SetScale('intint');
-$graph->title->Set('BURNTOUT GRAPH');
+$graph->title->Set('BURNDOWN CHART');
 $graph->xaxis->title->Set('dni');
 $graph->yaxis->title->Set('body');
 $graph->yaxis->HideZeroLabel();
