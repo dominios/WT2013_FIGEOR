@@ -40,6 +40,10 @@ span.icon.icon-chart-curve {
     background-image: url('../img/chart_curve.png');
 }
 
+span.icon.icon-chart-stock {
+    background-image: url('../img/chart_stock.png');
+}
+
 span.icon.icon-chart-down {
     background-image: url('../img/chart_down_color.png');
 }
@@ -74,4 +78,12 @@ span.icon.icon-project {
 
 span.icon.icon-logout {
     background-image: url('../img/logout.png');
+}
+
+span.icon.icon-flag-green {
+    background-image: url('../img/flag_green.png');
+}
+
+span.icon.icon-flag-finish {
+    background-image: url('../img/flag_finish.png');
 }

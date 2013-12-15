@@ -65,10 +65,37 @@ aside#leftPanel h2 {
 section#rightPanel {
     float: left;
     width: 750px;
+    font-size: 14px;
+    padding-bottom: 20px;
 }
 
 section#rightPanel h2 {
     margin-bottom: 10px;
+}
+
+#stats img {
+    margin: 20px 0;
+    padding: 5px;
+    border: 1px solid #bbb;
+    border-top-color: #ddd;
+    border-left-color: #ddd;
+    box-shadow: 2px 2px 7px #bbb;
+    background: #fff;
+    width: 740px;
+}
+
+.task {
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #aaa;
+    border-top-color: #ccc;
+    border-left-color: #ccc;
+    box-shadow: 2px 2px 7px #bbb;
+    background: rgba(255, 255, 255, 0.285);
+}
+
+.task strong {
+    font-size: 15px;
 }
 
 /* formulare */
@@ -88,7 +115,6 @@ input, textarea, button, .button {
 }
 
 button, .button {
-    /*margin: 2px;*/
     margin-right: 2px;
     cursor: pointer;
     padding: 2px;
@@ -122,4 +148,62 @@ input:hover, textarea:hover, input:focus, textarea:focus {
 input[type='submit']:hover, input[type='button']:hover, button:hover, .button:hover {
     color: #000;
     text-decoration: none;
+}
+
+.subTasks {
+    margin: 10px 0;
+}
+
+.subTasks .button, .subTasks button {
+    line-height: 18px;
+    margin: 0;
+    font-size: 9px;
+    height: 18px;
+    padding: 2px 5px;
+}
+
+.subTasks ul {
+    list-style-image: url('/design/img/ul_task.png');
+    vertical-align: middle;
+    line-height: 1em;
+}
+
+.subTasks ul li {
+    vertical-align: middle;
+    line-height: 2.2em;
+    height: 2.2em;
+}
+
+.subHeader {
+    border-bottom: 1px solid #d5d5d5;
+    padding-bottom: 4px;
+}
+
+.prio1 {
+    color: #d00000;
+}
+
+.prio2 {
+    color: #ffc000;
+}
+
+.prio3 {
+    color: #c18aff;
+}
+
+.subTasks ul li.finished {
+    color: #555;
+    opacity: 0.5;
+}
+
+/* tabulky */
+
+table {
+    border: 0;
+}
+
+table tr td {
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
 }
