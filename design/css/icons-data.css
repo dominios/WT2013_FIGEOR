@@ -1,5 +1,77 @@
 /* takto spravit vsetky ikonky a nakopcit ich do adresara! */
 
-span.icon.icon-hocico {
-    background-image: url('../img/hocico.png');
+span.icon.icon-add {
+    background-image: url('../img/add.png');
+}
+
+span.icon.icon-attachment {
+    background-image: url('../img/attachment.png');
+}
+
+span.icon.icon-calendar {
+    background-image: url('../img/calendar.png');
+}
+
+span.icon.icon-cross {
+    background-image: url('../img/cross.png');
+}
+
+span.icon.icon-clock-red {
+    background-image: url('../img/clock_red.png');
+}
+
+span.icon.icon-comment {
+    background-image: url('../img/comment.png');
+}
+
+span.icon.icon-date {
+    background-image: url('../img/date.png');
+}
+
+span.icon.icon-date-task {
+    background-image: url('../img/date_task.png');
+}
+
+span.icon.icon-email {
+    background-image: url('../img/email.png');
+}
+
+span.icon.icon-chart-curve {
+    background-image: url('../img/chart_curve.png');
+}
+
+span.icon.icon-chart-down {
+    background-image: url('../img/chart_down_color.png');
+}
+
+span.icon.icon-edit {
+    background-image: url('../img/edit.png');
+}
+
+span.icon.icon-statistics {
+    background-image: url('../img/statistics.png');
+}
+
+span.icon.icon-tick {
+    background-image: url('../img/tick.png');
+}
+
+span.icon.icon-time {
+    background-image: url('../img/time.png');
+}
+
+span.icon.icon-user {
+    background-image: url('../img/user.png');
+}
+
+span.icon.icon-vcard {
+    background-image: url('../img/vcard.png');
+}
+
+span.icon.icon-project {
+    background-image: url('../img/project.png');
+}
+
+span.icon.icon-logout {
+    background-image: url('../img/logout.png');
 }

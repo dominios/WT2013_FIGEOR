@@ -16,7 +16,7 @@ class ProjectsController extends AbstractController {
             $view->project = $project;
             $view->tasks = $project->getTasks();
             $ret = array();
-            $ret['title'] = 'Detail projektu';
+            $ret['title'] = $project->getName();
             $ret['main'] = $view->renderToString();
             return $ret;
         } else {
