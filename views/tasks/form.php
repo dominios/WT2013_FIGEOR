@@ -30,9 +30,15 @@
                 </td>
             </tr>
             <tr>
-                <td>Deadline:</td>
+                <td>Termín:</td>
                 <td>
                     <input type="datetime-local" name="taskDeadline" value="<?= $this->task !== null ? $this->task->getDeadline('Y-m-d\TH:i:s') : ''; ?>">
+                </td>
+            </tr>
+            <tr>
+                <td>Splnená:</td>
+                <td>
+                    <input type="checkbox" name="taskFinished" <?= $this->task !== null && $this->task->isFinished() ? 'checked' : ''; ?> value='checked'>
                 </td>
             </tr>
             <tr>

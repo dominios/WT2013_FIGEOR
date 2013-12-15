@@ -52,7 +52,8 @@ foreach ($this->tasks as $task):
             } else {
                 echo ' <a href="/tasks/markAsDone/' . $t->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');">[complete]</a>';
             }
-            echo ' <a href="/tasks/delete/' . $t->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');">[vymazať]</a>';
+            echo ' <a href="/tasks/edit/' . $t->getId() . '">[upraviť]</a>';
+            echo ' <a href="/tasks/delete/' . $t->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu?\');">[vymazať]</a>';
             echo '</li>';
         endforeach;
         echo '</ul>';
