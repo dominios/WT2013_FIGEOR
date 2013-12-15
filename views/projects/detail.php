@@ -1,7 +1,8 @@
 
-<section id="graphs" style="margin: 25px 0 ;">
+<section id="stats" style="margin: 10px 0 ;">
     <p>
         <?
+        $projectStart = $this->project->getDateCreated('d.m.Y H:i:s');
         $projectDeadline = $this->project->getDeadline();
         $projectDeadlieFormated = $this->project->getDeadline('d.m.Y H:i:s');
         $projectPoints = $this->project->getPointsOverall();
@@ -15,38 +16,69 @@
         $projectAvgBurnout = $projectPoints / $projectDaysLeft;
         $projectBurntPoints = $this->project->getBurntPoints();
         ?>
-        Celkový deadline: <?= $projectDeadlieFormated ?><br>
-        Celkom počet bodov: <?= $projectPoints; ?><br>
-        Celkom počet úloh: <?= $projectTasks; ?><br>
-        Zostáva dní: <?= $projectDaysLeft; ?><br>
-        Priemerne treba spáliť: <?= $projectAvgBurnout; ?><br>
-        Spálené / zostáva: <?= $projectBurntPoints . ' / ' . ($projectPoints - $projectBurntPoints); ?>
+    <table cellspacing='5' cellpadding='5' border='0' style="float: left; margin-right: 50px;">
+        <tr>
+            <td><span class="icon icon-flag-green"></span>Začiatok:</td><td><?= $projectStart; ?></td>
+        </tr><tr>
+            <td><span class="icon icon-flag-finish"></span>Koniec:</td><td><?= $projectDeadlieFormated; ?></td>
+        </tr><tr>
+            <td><span class="icon icon-clock-red"></span>Zostáva dní:</td><td><?= $projectDaysLeft; ?></td>
+        </tr>
+    </table>
+    <table cellspacing='5' cellpadding='5' border='0'>
+        <tr>
+            <td><span class="icon icon-date-task"></span>Počet všetkých úloh:</td><td><?= $projectTasks; ?></td>
+        </tr><tr>
+            <td><span class="icon icon-chart-stock"></span>Celkový počet bodov:</td><td><?= $projectPoints; ?></td>
+        </tr><tr>
+            <td><span class="icon icon-chart-down"></span>Spálené / zostáva:</td><td><?= $projectBurntPoints . ' / ' . ($projectPoints - $projectBurntPoints); ?> (bodov)</td>
+        </tr>
+    </table>
 
-        <img src="/graph.php?project=<?= $this->project->getId(); ?>">
+    <img src="/graph.php?project=<?= $this->project->getId(); ?>">
     </p>
 </section>
 
 <h3>Zoznam úloh:</h3>
 <?
 foreach ($this->tasks as $task):
-    echo '<div class="task" style="margin: 15px 0; padding: 5px; border: 1px solid #ccc;">';
+    echo '<div class="task">';
     echo '<strong>' . $task->getName() . '</strong>';
     echo ', termín: ' . $task->getDeadline('d.m.Y H:i:s');
-    echo ', priorita: ' . $task->getPriority();
+    $priority = $task->getPriority();
+    if ($priority <= 3 && $priority > 0) {
+        echo ', <span class="prio' . $priority . '">priorita: ' . $task->getPriority() . '</span>';
+    } else {
+        echo ', žiadna priorita';
+    }
     echo ', body: ' . $task->getPoints();
 
     echo '<p>' . $task->getDescription() . '</p>';
 
     echo '<div class="subTasks">';
     if ($task->hasSubTasks()) {
-        echo 'Podúlohy:';
+        echo '<div class="subHeader">Podúlohy:</div>';
         echo '<ul>';
         $tasks = $task->getSubTasks();
         foreach ($tasks as $t):
-            echo '<li>';
+            $class = array();
+            if ($t->isFinished()) {
+                $class[] = 'finished';
+            }
+            $priority = $t->getPriority();
+            if ($priority <= 3 && $priority > 0) {
+                $class[] = 'prio' . $priority;
+            }
+
+            echo '<li ' . 'class="' . implode(' ', $class) . '"' . ' title="' . $t->getDescription() . '">';
             echo $t->getName();
             if ($t->isFinished()) {
-                echo ' [done]';
+                echo ' (splnené ' . $t->getDateFinished('d.m.Y H:i:s') . ', body: ' . $t->getPoints() . ')';
+            } else {
+                echo ' (T: ' . $t->getDeadline('d.m.Y H:i:s') . ', body: ' . $t->getPoints() . ')';
+            }
+            if ($t->isFinished()) {
+                echo '<span class="icon icon-tick" style="margin-left: 8px;"></span>';
             } else {
                 echo ' <a class="button" href="/tasks/markAsDone/' . $t->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');"><span class="icon icon-tick"></span>Splniť</a>';
             }
@@ -60,6 +92,7 @@ foreach ($this->tasks as $task):
     echo '</div>';
 
     echo '<div class="attachments">';
+    echo '<div class="subHeader" style="margin-bottom: 10px;">Prílohy:</div>';
     if (sizeof($task->getAttachments())) {
         foreach ($task->getAttachments() as $att):
             echo '<a class="button" href="/' . $att->getUrl() . '" target="_blank"><span class="icon icon-attachment"></span>' . $att->getName() . '</a> ';

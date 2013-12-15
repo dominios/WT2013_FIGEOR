@@ -109,8 +109,8 @@ class Task implements IModel {
         return $this;
     }
 
-    public function getDateFinished() {
-        return $this->dateFinished;
+    public function getDateFinished($format = null) {
+        return $format === null ? $this->dateFinished : date($format, $this->dateFinished);
     }
 
     public function isFinished() {
