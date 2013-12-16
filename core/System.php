@@ -60,7 +60,11 @@ class System {
     }
 
     public static function currentUser() {
-        return new \Figeor\Models\User(1);
+        if (isset($_SESSION['userId'])) {
+            return new \Figeor\Models\User($_SESSION['userId']);
+        } else {
+            return null;
+        }
     }
 
     public static function checkLogin() {
