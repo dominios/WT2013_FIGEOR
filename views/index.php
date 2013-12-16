@@ -5,6 +5,7 @@
         <link href="/design/css/style.css" type="text/css" rel="stylesheet">
         <link href="/design/css/icons.css" type="text/css" rel="stylesheet">
         <link href="/design/css/icons-data.css" type="text/css" rel="stylesheet">
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     </head>
     <body>
 

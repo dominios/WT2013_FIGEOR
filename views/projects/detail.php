@@ -43,7 +43,21 @@
     if ($projectTasks < 1):
         echo '<p>Pre zostrojenie grafu spaľovania je potrebné pridať do projektu úlohy a zadať im body.</p>';
     else :
-        echo '<img src="/graph.php?project=' . $this->project->getId() . '">';
+        echo '<img src="/graph.php?project=' . $this->project->getId() . '" id="burndownchart">';
+        ?>
+        Začiatok:
+        <input type="text" name="chartStart" size="1">
+        Koniec:
+        <input type="text" name="chartTo" size="1">
+        <div class="button" onclick="javascript: regenerateChart();">zobraziť v danom rozsahu</div>
+        <script type="text/javascript">
+            function regenerateChart() {
+                from = $("input[name='chartStart']").val();
+                to = $("input[name='chartTo']").val();
+                $("#burndownchart").attr('src', '/graph.php?project=<?= $this->project->getId(); ?>&from=' + from + '&to=' + to);
+            }
+        </script>
+    <?
     endif;
     ?>
 </p>

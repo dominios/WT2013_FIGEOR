@@ -74,6 +74,20 @@ foreach ($diffData as $diff) {
 $realData[$project->getCurrentDay()] = $projectPoints - $projectBurntPoints;
 
 // vytvorenie a vykreslenie grafu
+//osekntunie dat podla filtra
+$FROM = isset($_GET['from']) ? $_GET['from'] : 1;
+$TO = isset($_GET['to']) ? $_GET['to'] : $project->getOverallDurationDays();
+$indexStart = array_search($FROM, $daysData);
+$indexEnd = array_search($TO, $daysData);
+if ($indexEnd == null) {
+    $indexEnd = max(array_keys($daysData));
+}
+$length = $indexEnd - $indexStart;
+$daysData = array_slice($daysData, $indexStart, $length);
+$optimalData = array_slice($optimalData, $indexStart, $length);
+$realData = array_slice($realData, $indexStart, $length);
+
+
 
 $graph = new Graph($width, $height);
 $graph->img->SetAntiAliasing(true);
@@ -92,7 +106,6 @@ $lineplotReal = new LinePlot($realData);
 $lineplotReal->SetLegend('Reálny priebeh');
 $graph->Add($lineplotReal);
 $graph->Stroke();
-
 // debugging
 die;
 echo '<pre>';
