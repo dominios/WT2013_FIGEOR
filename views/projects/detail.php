@@ -45,17 +45,19 @@
     else :
         echo '<img src="/graph.php?project=' . $this->project->getId() . '" id="burndownchart">';
         ?>
-        Začiatok:
-        <input type="text" name="chartStart" size="1">
-        Koniec:
-        <input type="text" name="chartTo" size="1">
-        <div class="button" onclick="javascript: regenerateChart();">zobraziť v danom rozsahu</div>
+        <div style="text-align: center;">
+            Začiatok:
+            <input type="text" name="chartStart" size="1">
+            Koniec:
+            <input type="text" name="chartTo" size="1">
+            <div class="button" onclick="javascript: regenerateChart();"><span class="icon icon-statistics"></span>prekresliť v danom rozsahu</div>
+        </div>
         <script type="text/javascript">
-            function regenerateChart() {
-                from = $("input[name='chartStart']").val();
-                to = $("input[name='chartTo']").val();
-                $("#burndownchart").attr('src', '/graph.php?project=<?= $this->project->getId(); ?>&from=' + from + '&to=' + to);
-            }
+                function regenerateChart() {
+                    from = $("input[name='chartStart']").val();
+                    to = $("input[name='chartTo']").val();
+                    $("#burndownchart").attr('src', '/graph.php?project=<?= $this->project->getId(); ?>&from=' + from + '&to=' + to);
+                }
         </script>
     <?
     endif;
@@ -128,9 +130,9 @@ foreach ($this->tasks as $task):
     // cp
     echo '<div style="float: right;">';
     if ($task->isFinished()) {
-        echo ' [done]';
+        echo '<span class="icon icon-tick"></span>Úloha bola splnená ';
     } elseif ($task->isFinishable()) {
-        echo ' <a href="/tasks/markAsDone/' . $task->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');">[complete]</a>';
+        echo ' <a class="button" href="/tasks/markAsDone/' . $task->getId() . '" onclick="return confirm(\'Označiť úlohu ako splnenú?\');"><span class="icon icon-tick"></span>Splniť</a>';
     }
     echo '<a class="button" href="/tasks/edit/' . $task->getId() . '"><span class="icon icon-edit"></span>Upraviť</a>';
     echo '<a class="button" href="/tasks/delete/' . $task->getId() . '" onclick="return confirm(\'Naozaj vymazať túto úlohu, vrátane jej podúloh?\');"><span class="icon icon-cross"></span>Vymazať</a>';
