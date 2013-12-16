@@ -80,7 +80,8 @@ class Project implements IModel {
 
     public function delete() {
         $DBH = System::getInstance()->getDBH();
-        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECTS . ' WHERE id_p = ' . $this->id);
+        $DBH->exec('DELETE FROM ' . System::TABLE_USER_PROJECTS . ' WHERE project = ' . $this->id);
+        $DBH->exec('DELETE FROM ' . System::TABLE_PROJECTS . ' WHERE id = ' . $this->id);
     }
 
     public function getId() {

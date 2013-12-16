@@ -75,4 +75,17 @@ class ProjectsController extends AbstractController {
         $this->redirect('/projects/edit/' . $project->getId());
     }
 
+    protected function delete() {
+        if (!Project::exists($_GET['id'])) {
+            $this->redirect('/projects/admin');
+        }
+        $project = new Project($_GET['id']);
+        $tasks = $project->getTasks();
+        foreach ($tasks as $task) {
+            $task->delete();
+        }
+        $project->delete();
+        $this->redirect('/projects/admin');
+    }
+
 }

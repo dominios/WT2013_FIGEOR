@@ -7,7 +7,7 @@ foreach ($this->tasks as $task):
     }
     $parentTask = '';
     if ($task->getParentTask() instanceof Figeor\Models\Task) {
-        $parentTask = ' / ' . $task->getParentTask()->getName();
+        $parentTask = ' / <span class="icon icon-date-task"></span>' . $task->getParentTask()->getName();
     }
     ?>
     <div class="uloha <?= $class; ?>">
