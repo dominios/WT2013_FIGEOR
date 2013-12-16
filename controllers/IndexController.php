@@ -21,7 +21,7 @@ class IndexController extends AbstractController {
 
     protected function logout() {
         unset($_SESSION['userId']);
-        $this->redirect('/tasks/view');
+        $this->redirect('/');
     }
 
     protected function profil() {
