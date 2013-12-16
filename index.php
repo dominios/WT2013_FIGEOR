@@ -4,6 +4,13 @@ namespace Figeor;
 
 require_once 'init.php';
 
+Core\System::checkLogin();
+if (empty($_SESSION['userId'])) {
+    $view = new Core\View('index/login.php');
+    echo $view->renderToString();
+    die;
+}
+
 $parsedUrl = @(Controller\AbstractController::parseURL());
 
 $controllerName = strlen($parsedUrl['controller']) ? $parsedUrl['controller'] : 'index';

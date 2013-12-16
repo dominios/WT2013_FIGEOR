@@ -63,5 +63,27 @@ class System {
         return new \Figeor\Models\User(1);
     }
 
+    public static function checkLogin() {
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            $pwd = md5($_POST['password']);
+            $email = $_POST['email'];
+            $dbh = self::getInstance()->getDBH();
+            $q = $dbh->prepare('SELECT * FROM ' . self::TABLE_USERS . ' WHERE email=:em LIMIT 1;');
+            $q->bindValue(':em', $email, PDO::PARAM_STR);
+            $q->execute();
+            if ($q->rowCount()) {
+                $r = $q->fetch();
+                if ($r['password'] == $pwd) {
+                    $_SESSION['userId'] = $r['id'];
+                }
+            }
+            $url = '/tasks/view';
+            ob_clean();
+            header('Location: ' . $url, false, 301);
+            ob_end_flush();
+            exit;
+        }
+    }
+
 }
 

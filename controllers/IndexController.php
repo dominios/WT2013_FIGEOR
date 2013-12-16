@@ -19,6 +19,11 @@ class IndexController extends AbstractController {
         return $ret;
     }
 
+    protected function logout() {
+        unset($_SESSION['userId']);
+        $this->redirect('/tasks/view');
+    }
+
     protected function profil() {
         $user = System::currentUser();
         $view = new View('index/profil.php');
