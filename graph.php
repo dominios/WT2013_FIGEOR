@@ -83,6 +83,7 @@ if ($indexEnd == null) {
     $indexEnd = max(array_keys($daysData));
 }
 $length = $indexEnd - $indexStart;
+$length++;
 $daysData = array_slice($daysData, $indexStart, $length);
 $optimalData = array_slice($optimalData, $indexStart, $length);
 $realData = array_slice($realData, $indexStart, $length);
@@ -106,7 +107,8 @@ $lineplotReal = new LinePlot($realData);
 $lineplotReal->SetLegend('Reálny priebeh');
 $graph->Add($lineplotReal);
 $graph->Stroke();
-// debugging
+
+/* debugging */
 die;
 echo '<pre>';
 print_r($daysData);
