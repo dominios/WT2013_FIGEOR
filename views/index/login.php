@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title><?= $this->title; ?> | FIGEOR</title>
+        <title>PRIHLÁSENIE | FIGEOR</title>
         <link href="/design/css/style.css" type="text/css" rel="stylesheet">
         <link href="/design/css/icons.css" type="text/css" rel="stylesheet">
         <link href="/design/css/icons-data.css" type="text/css" rel="stylesheet">
