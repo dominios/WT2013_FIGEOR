@@ -71,13 +71,15 @@ foreach ($diffData as $diff) {
     $realData[$i++] = $pts;
 }
 
+$realData[$project->getCurrentDay()] = $projectPoints - $projectBurntPoints;
+
 // vytvorenie a vykreslenie grafu
 
 $graph = new Graph($width, $height);
 $graph->img->SetAntiAliasing(true);
 $graph->SetScale('intint');
 $graph->title->Set('GRAF SPAĽOVANIA');
-$graph->xaxis->title->Set('dni');
+$graph->xaxis->title->Set('deň');
 $graph->yaxis->title->Set('body');
 $graph->yaxis->HideZeroLabel();
 $graph->xaxis->SetTickLabels($daysData);
@@ -91,7 +93,10 @@ $lineplotReal->SetLegend('Reálny priebeh');
 $graph->Add($lineplotReal);
 $graph->Stroke();
 
+// debugging
 die;
 echo '<pre>';
 print_r($daysData);
+print_r($diffData);
 print_r($realData);
+echo '</pre>';

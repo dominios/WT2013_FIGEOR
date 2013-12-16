@@ -162,7 +162,7 @@ class Project implements IModel {
             FROM ' . System::TABLE_TASKS . ' t
             JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
             WHERE project = ' . $this->getId() . ';')->fetch();
-        return $r['sum'];
+        return $r['sum'] != null ? $r['sum'] : 0;
     }
 
     public function getBurntPoints() {
@@ -184,7 +184,7 @@ class Project implements IModel {
     }
 
     public function getOverallDurationDays() {
-        $dStart = new \DateTime("@$this->dateCreated");
+        $dStart = new \DateTime("@" . strtotime("0:00", $this->dateCreated));
         $dEnd = new \DateTime("@" . $this->deadline);
         $dDiff = $dStart->diff($dEnd);
         return $dDiff->days;

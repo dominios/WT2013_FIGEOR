@@ -2,18 +2,23 @@
 <section id="stats" style="margin: 10px 0 ;">
     <p>
         <?
-        $projectStart = $this->project->getDateCreated('d.m.Y H:i:s');
+        $projectStart = $this->project->getDateCreated('d.m.Y');
         $projectDeadline = $this->project->getDeadline();
         $projectDeadlieFormated = $this->project->getDeadline('d.m.Y H:i:s');
         $projectPoints = $this->project->getPointsOverall();
         $projectTasks = $this->project->getAllTaskCount();
 
-        $dStart = new DateTime("@$projectDeadline");
-        $dEnd = new DateTime("@" . time());
-        $dDiff = $dStart->diff($dEnd);
-        $projectDaysLeft = $dDiff->days;
+        if ($projectDeadline < time()) {
+            $projectDeadlieFormated = 'nezadaný';
+            $projectDaysLeft = 'n/a';
+        } else {
 
-        $projectAvgBurnout = $projectPoints / $projectDaysLeft;
+            $dStart = new DateTime("@$projectDeadline");
+            $dEnd = new DateTime("@" . time());
+            $dDiff = $dStart->diff($dEnd);
+            $projectDaysLeft = $dDiff->days;
+//            $projectAvgBurnout = $projectPoints / $projectDaysLeft;
+        }
         $projectBurntPoints = $this->project->getBurntPoints();
         ?>
     <table cellspacing='5' cellpadding='5' border='0' style="float: left; margin-right: 50px;">
@@ -34,9 +39,14 @@
             <td><span class="icon icon-chart-down"></span>Spálené / zostáva:</td><td><?= $projectBurntPoints . ' / ' . ($projectPoints - $projectBurntPoints); ?> (bodov)</td>
         </tr>
     </table>
-
-    <img src="/graph.php?project=<?= $this->project->getId(); ?>">
-    </p>
+    <?
+    if ($projectTasks < 1):
+        echo '<p>Pre zostrojenie grafu spaľovania je potrebné pridať do projektu úlohy a zadať im body.</p>';
+    else :
+        echo '<img src="/graph.php?project=' . $this->project->getId() . '">';
+    endif;
+    ?>
+</p>
 </section>
 
 <h3>Zoznam úloh:</h3>

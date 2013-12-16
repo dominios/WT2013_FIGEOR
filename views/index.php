@@ -30,7 +30,7 @@
                     <div id="allProjects">
                         <a href="/projects/admin"><span class='icon icon-chart-curve'></span>Spravovať projekty</a><br>
                         <?
-                        $user = new Figeor\Models\User(1);
+                        $user = \Figeor\Core\System::currentUser();
                         foreach (Figeor\Models\Project::fetchByUser($user) as $p):
                             echo '<a href="/projects/view/' . $p->getId() . '"><span class="icon icon-project"></span>' . $p->getName() . '</a><br>';
                         endforeach;
