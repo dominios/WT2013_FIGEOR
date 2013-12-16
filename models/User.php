@@ -125,13 +125,24 @@ class User implements IModel {
         foreach ($dbh->query('SELECT t.id AS taskId FROM ' . System::TABLE_TASKS . ' t
             JOIN ' . System::TABLE_PROJECT_TASKS . ' pt ON t.id = pt.task
             JOIN ' . System::TABLE_USER_PROJECTS . ' up ON up.project = pt.project
-            WHERE up.user = ' . System::currentUser()->getId() . ' && t.dateFinished IS NULL && t.deadline >= ' . time() . $timeCondition . '
+            WHERE up.user = ' . $this->getId() . ' && t.dateFinished IS NULL && t.deadline >= ' . time() . $timeCondition . '
             ORDER BY
                 CASE WHEN t.deadline > 0 && t.deadline IS NOT NULL THEN 0 ELSE 1 END ASC,
                 CASE WHEN t.priority != 0 && t.priority IS NOT NULL THEN 0 ELSE 1 END ASC;') as $r) {
             $ret[] = new Task($r['taskId']);
         }
         return $ret;
+    }
+
+    public static function getByEmail($email) {
+        $dbh = System::getInstance()->getDBH();
+        $q = $dbh->query('SELECT id FROM ' . System::TABLE_USERS . ' WHERE email="' . $email . '"');
+        if ($q->rowCount()) {
+            $r = $q->fetch();
+            return new User($r['id']);
+        } else {
+            return null;
+        }
     }
 
 }
